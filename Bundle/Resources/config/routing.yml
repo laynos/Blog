@@ -1,3 +1,6 @@
 blog_homepage:
     path:     /blog
     defaults: { _controller: BlogBundle:Article:index }
+blog_article_test:
+    path:     /add
+    defaults: { _controller: BlogBundle:Article:add }	
