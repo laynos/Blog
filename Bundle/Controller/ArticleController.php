@@ -8,44 +8,54 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ArticleController extends Controller
 {
+
+	    public function indexAction()
+    {
+		$repository = $this
+			->getDoctrine()
+			->getManager()
+			->getRepository('BlogBundle:Article')
+		;
+
+
+		$listArticles = $repository->findAll();
+/*
+	foreach ($listArticles as $article) {
+  // $advert est une instance de Advert
+		//echo $article->getContent();
+
+	}
+  */      return $this->render('BlogBundle:Home:index.html.twig', array(
+  'listArticles' => $listArticles
+));
+    }
+
 	public function viewAction($id)
   {
-    $advert = array(
-      'title'   => 'Recherche développpeur Symfony2',
-      'id'      => $id,
-      'author'  => 'Alexandre',
-      'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
-      'date'    => new \Datetime()
-    );
+
+	  // On récupère le repository
+   // $repository = $this->getDoctrine()
+     // ->getManager()
+	  //->getRepository('BlogBundle:Article')
+	 //;
+	  //->find('BlogBundle:Article', $id);
+	$article = $this->getDoctrine()
+	->getManager()
+	->find('BlogBundle:Article', $id)
+	;
+
+	//$article = $repository->find($id);
+
+	 if (null === $article) {
+      throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+    }
+
 
     return $this->render('BlogBundle:Article:view.html.twig', array(
       'article' => $article
     ));
   }
-	public function menuAction($limit)
-  {
-    // On fixe en dur une liste ici, bien entendu par la suite
-    // on la récupérera depuis la BDD !
-    $listArticles = array(
-      array('id' => 2, 'title' => 'Recherche développeur Symfony2'),
-      array('id' => 5, 'title' => 'Mission de webmaster'),
-      array('id' => 9, 'title' => 'Offre de stage webdesigner')
-    );
-
-    return $this->render('BlogBundle:Article:menu.html.twig', array(
-      // Tout l'intérêt est ici : le contrôleur passe
-      // les variables nécessaires au template !
-      'listArticles' => $listArticles
-    ));
-  }
-	
-    public function indexAction()
-    {
-        return $this->render('BlogBundle:Home:index.html.twig', array(
-  'listArticles' => array()
-));
-    }
-	public function addAction(Request $request)
+  	public function addAction(Request $request)
   {
 	$em = $this->getDoctrine()->getManager();
 	$article = new Article();
@@ -68,45 +78,102 @@ class ArticleController extends Controller
     $form = $formBuilder->getForm();
 	$formBuilder->add('published', 'checkbox', array('required' => false));
 	$form->handleRequest($request);
-	
+
 	if ($form->isValid()) {
-		
+
       $em->persist($article);
       $em->flush();
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
       // On redirige vers la page de visualisation de l'annonce nouvellement créée
-      return $this->redirect($this->generateUrl('blog_homepage', array('id' => $article->getId())));
+      return $this->redirect($this->generateUrl('blog_view', array('id' => $article->getId())));
     }
 	/*
-    // Création de l'entité
-    $article = new Article();
-    $article->setTitle('Recherche développeur Symfony2.');
-    $article->setAuthor('Alexandre');
-    $article->setContent("Nous recherchons un développeur Symfony2 débutant sur Paris. Blabla…");
-    // On peut ne pas définir ni la date ni la publication,
-    // car ces attributs sont définis automatiquement dans le constructeur
-
-    // On récupère l'EntityManager
-    $em = $this->getDoctrine()->getManager();
-
-    // Étape 1 : On « persiste » l'entité
-    $em->persist($article);
-
-    // Étape 2 : On « flush » tout ce qui a été persisté avant
-    $em->flush();
-
     // Reste de la méthode qu'on avait déjà écrit
     if ($request->isMethod('POST')) {
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
-      return $this->redirect($this->generateUrl('oc_platform_view', array('id' => $article->getId())));
+      return $this->redirect($this->generateUrl('blog_view', array('id' => $article->getId())));
     }
 	*/
     //return $this->render('BlogBundle:Article:add.html.twig');
-	
+
 	return $this->render('BlogBundle:Article:add.html.twig', array(
       'form' => $form->createView(),
     ));
   }
+	public function menuAction($limit = 3)
+  {
+	  		$repository = $this
+			->getDoctrine()
+			->getManager()
+			->getRepository('BlogBundle:Article')
+			;
+
+
+
+	$listArticles = $repository->findBy(
+  array(), // Critere
+  array('date' => 'desc'),        // Tri
+  $limit,                         // Limite
+  0                            // Offset
+);
+
+    return $this->render('BlogBundle:Article:menu.html.twig', array(
+      // Tout l'intérêt est ici : le contrôleur passe
+      // les variables nécessaires au template !
+      'listArticles' => $listArticles
+    ));
+  }
+
+
+
+
+
+   public function editAction($id, Request $request)
+  {
+    $em = $this->getDoctrine()->getManager();
+
+    // On récupère l'annonce $id
+    $article = $em->getRepository('BlogBundle:Article')->find($id);
+
+    if (null === $article) {
+      throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+    }
+
+	// formulaire
+
+  return $this->render('BlogBundle:Article:edit.html.twig', array(
+      'article' => $article
+    ));
+  }
+
+  public function deleteAction($id, Request $request)
+  {
+    // On récupère l'EntityManager
+    $em = $this->getDoctrine()->getManager();
+
+    // On récupère l'entité correspondant à l'id $id
+    $article = $em->getRepository('BlogBundle:Article')->find($id);
+
+    // Si l'annonce n'existe pas, on affiche une erreur 404
+    if ($article == null) {
+      throw $this->createNotFoundException("L'annonce d'id ".$id." n'existe pas.");
+    }
+
+    if ($request->isMethod('POST')) {
+      // Si la requête est en POST, on deletea l'article
+
+      $request->getSession()->getFlashBag()->add('info', 'Annonce bien supprimée.');
+
+      // Puis on redirige vers l'accueil
+      return $this->redirect($this->generateUrl('blog_homepage'));
+    }
+
+    // Si la requête est en GET, on affiche une page de confirmation avant de delete
+    return $this->render('BlogBundle:Article:delete.html.twig', array(
+      'article' => $article
+    ));
+  }
+
 }

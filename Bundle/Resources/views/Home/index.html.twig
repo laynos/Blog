@@ -12,8 +12,9 @@
 
   <ul>
     {% for article in listArticles %}
-      <li>
-        <a href="{{ path('oc_platform_view', {'id': article.id}) }}">
+      
+	  <li>
+        <a href="{{ path('blog_view', {'id': article.id}) }}">
           {{ article.title }}
         </a>
         par {{ article.author }},

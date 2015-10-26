@@ -1,5 +1,5 @@
 blog_homepage:
-    path:     /home
+    path:     /
     defaults: { _controller: BlogBundle:Article:index }
 blog_article_test:
     path:     /article
@@ -8,7 +8,7 @@ blog_view:
     path:  /view/{id}
     defaults: { _controller: BlogBundle:Article:view }
 
-blog__delete:
+blog_delete:
     path:      /delete/{id}
     defaults:  { _controller: BlogBundle:Article:delete }
     requirements:
