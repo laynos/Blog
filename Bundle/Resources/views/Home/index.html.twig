@@ -1,17 +1,27 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Blog</title>
-  </head>
-  <body>
-    <h1></h1>
+{# src/OC/Blog/Resources/views/Article/index.html.twig #}
 
-    <ul id="navigation">
-      
-        <li>
-			wesh
-        </li>
-      
-    </ul>
-  </body>
-</html>
+{% extends "BlogBundle::layout.html.twig" %}
+
+{% block title %}
+  Accueil - {{ parent() }}
+{% endblock %}
+
+{% block blog_body %}
+
+  <h2>Liste des annonces</h2>
+
+  <ul>
+    {% for article in listArticles %}
+      <li>
+        <a href="{{ path('oc_platform_view', {'id': article.id}) }}">
+          {{ article.title }}
+        </a>
+        par {{ article.author }},
+        le {{ article.date|date('d/m/Y') }}
+      </li>
+    {% else %}
+      <li>Pas (encore !) d'annonces</li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

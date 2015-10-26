@@ -4,3 +4,6 @@ blog_homepage:
 blog_article_test:
     path:     /article
     defaults: { _controller: BlogBundle:Article:add }	
+blog_view:
+    path:  /edit
+    defaults: { _controller: BlogBundle:Article:view }
