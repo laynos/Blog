@@ -22,7 +22,7 @@ class ArticleController extends Controller
       'article' => $article
     ));
   }
-		 public function menuAction($limit)
+	public function menuAction($limit)
   {
     // On fixe en dur une liste ici, bien entendu par la suite
     // on la récupérera depuis la BDD !
