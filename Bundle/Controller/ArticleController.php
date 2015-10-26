@@ -14,6 +14,7 @@ class ArticleController extends Controller
     }
 	public function addAction(/*Request $request*/)
   {
+	  $em = $this->getDoctrine()->getManager();
 	  /*
     // Création de l'entité
     $article = new Article();

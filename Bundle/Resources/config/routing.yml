@@ -1,6 +1,6 @@
 blog_homepage:
-    path:     /blog
+    path:     /home
     defaults: { _controller: BlogBundle:Article:index }
 blog_article_test:
-    path:     /add
+    path:     /article
     defaults: { _controller: BlogBundle:Article:add }	
