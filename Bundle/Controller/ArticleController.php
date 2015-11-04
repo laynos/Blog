@@ -18,7 +18,12 @@ class ArticleController extends Controller
 		;
 
 
-		$listArticles = $repository->findAll();
+		$listArticles = $repository->findBy(
+  array(), // Critere
+  array('date' => 'desc'),        // Tri
+  100,                         // Limite
+  0                            // Offset
+);
 /*
 	foreach ($listArticles as $article) {
   // $advert est une instance de Advert
@@ -89,14 +94,6 @@ class ArticleController extends Controller
       // On redirige vers la page de visualisation de l'annonce nouvellement créée
       return $this->redirect($this->generateUrl('blog_view', array('id' => $article->getId())));
     }
-	/*
-    // Reste de la méthode qu'on avait déjà écrit
-    if ($request->isMethod('POST')) {
-      $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
-      return $this->redirect($this->generateUrl('blog_view', array('id' => $article->getId())));
-    }
-	*/
-    //return $this->render('BlogBundle:Article:add.html.twig');
 
 	return $this->render('BlogBundle:Article:add.html.twig', array(
       'form' => $form->createView(),
@@ -126,10 +123,6 @@ class ArticleController extends Controller
     ));
   }
 
-
-
-
-
    public function editAction($id, Request $request)
   {
     $em = $this->getDoctrine()->getManager();
@@ -141,6 +134,7 @@ class ArticleController extends Controller
       throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
     }
 
+	
 	// formulaire
 
   return $this->render('BlogBundle:Article:edit.html.twig', array(
@@ -163,13 +157,14 @@ class ArticleController extends Controller
 
     if ($request->isMethod('POST')) {
       // Si la requête est en POST, on deletea l'article
-
+		
       $request->getSession()->getFlashBag()->add('info', 'Annonce bien supprimée.');
-
+		
       // Puis on redirige vers l'accueil
       return $this->redirect($this->generateUrl('blog_homepage'));
     }
-
+	$em->remove($article);
+	$em->flush();
     // Si la requête est en GET, on affiche une page de confirmation avant de delete
     return $this->render('BlogBundle:Article:delete.html.twig', array(
       'article' => $article

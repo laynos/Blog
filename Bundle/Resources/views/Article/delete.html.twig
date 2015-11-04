@@ -1,0 +1,24 @@
+{# src/Blog/Bundle/Resources/views/Article/delete.html.twig #}
+
+{% extends "BlogBundle::layout.html.twig" %}
+
+{% block title %}
+  Suppression d'annonce - {{ parent() }}
+{% endblock %}
+
+{% block blog_body %}
+
+  <h2>Suppression d'une annonce</h2>
+
+  <p>
+    Vous venez de supprimer une annonce.
+  </p>
+
+  <p>
+    <a href="{{ path('blog_homepage') }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à l'accueil
+    </a>
+  </p>
+
+{% endblock %}
