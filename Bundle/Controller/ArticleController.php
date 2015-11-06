@@ -60,6 +60,30 @@ class ArticleController extends Controller
       'article' => $article
     ));
   }
+
+	public function menuAction($limit = 3)
+  {
+	  		$repository = $this
+			->getDoctrine()
+			->getManager()
+			->getRepository('BlogBundle:Article')
+			;
+
+
+
+	$listArticles = $repository->findBy(
+  array(), // Critere
+  array('date' => 'desc'),        // Tri
+  $limit,                         // Limite
+  0                            // Offset
+);
+
+    return $this->render('BlogBundle:Article:menu.html.twig', array(
+      // Tout l'intérêt est ici : le contrôleur passe
+      // les variables nécessaires au template !
+      'listArticles' => $listArticles
+    ));
+  }
   	public function addAction(Request $request)
   {
 	$em = $this->getDoctrine()->getManager();
@@ -99,46 +123,50 @@ class ArticleController extends Controller
       'form' => $form->createView(),
     ));
   }
-	public function menuAction($limit = 3)
-  {
-	  		$repository = $this
-			->getDoctrine()
-			->getManager()
-			->getRepository('BlogBundle:Article')
-			;
-
-
-
-	$listArticles = $repository->findBy(
-  array(), // Critere
-  array('date' => 'desc'),        // Tri
-  $limit,                         // Limite
-  0                            // Offset
-);
-
-    return $this->render('BlogBundle:Article:menu.html.twig', array(
-      // Tout l'intérêt est ici : le contrôleur passe
-      // les variables nécessaires au template !
-      'listArticles' => $listArticles
-    ));
-  }
-
+  
    public function editAction($id, Request $request)
   {
     $em = $this->getDoctrine()->getManager();
 
     // On récupère l'annonce $id
     $article = $em->getRepository('BlogBundle:Article')->find($id);
-
-    if (null === $article) {
+	if (null === $article) {
       throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+    }	
+   
+    $formBuilder = $this->get('form.factory')->createBuilder('form', $article);
+	$formBuilder
+      ->add('date',      'date', array("data" => $article->getDate() ) )
+      ->add('title',     'text', array("data" => $article->getTitle() ))
+      ->add('content',   'textarea', array("data" => $article->getContent()))
+      ->add('author',    'text', array("data" => $article->getAuthor()) )
+      ->add('published', 'checkbox')
+      ->add('save',      'submit')
+    ;
+	$form = $formBuilder->getForm();
+	//$formBuilder->add('published', 'checkbox', array('required' => false));
+	$form->handleRequest($request);
+
+	
+   if ($form->isValid()) {
+
+      $em->persist($article);
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+
+      // On redirige vers la page de visualisation de l'annonce nouvellement créée
+      return $this->redirect($this->generateUrl('blog_view', array('id' => $article->getId())));
     }
 
 	
 	// formulaire
 
-  return $this->render('BlogBundle:Article:edit.html.twig', array(
+	/*return $this->render('BlogBundle:Article:edit.html.twig', array(
       'article' => $article
+    ));
+	*/return $this->render('BlogBundle:Article:edit.html.twig', array(
+      'form' => $form->createView(),'article' => $article
     ));
   }
 
