@@ -28,11 +28,11 @@ a:hover {
 }
 
 .btn-danger {
-    background-color:#f44d3c;
+    background-color:#33cccc;
 }
 
 .text-danger, a.text-danger {
-    color:#f44d3c;
+    color:#33cccc;
 }
 
 .btn-huge {
@@ -60,16 +60,16 @@ a:hover {
 
 .navbar-trans .navbar-brand, .navbar-trans >.container-fluid .navbar-brand {
     padding: 14px;
-    color:#f44d3c;
+    color:#33cccc;
 }
 
 .navbar-trans li>a:focus,.navbar-trans li.active {
-	background-color:#f44d3c;
+	background-color:#33cccc;
 	color:#333;
 }
 
 .navbar-trans li>a:hover {
-	background-color:#f44d3c;
+	background-color:#33cccc;
 	color:#fff;
 	opacity:0.5;
 }
@@ -171,7 +171,7 @@ section {
 }
 
 #section7 {
-	background-color: #f44d3c;
+	background-color: #33cccc;
 	color: #f6f6f6;
 	min-height:130px;
 	padding-top:40px;
@@ -188,7 +188,7 @@ footer {
 
 footer .nav>li>a {
     padding: 3px;
-    color: #f44d3c;
+    color: #33cccc;
 }
 
 footer .nav>li>a:hover {
