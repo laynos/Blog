@@ -3,7 +3,7 @@
 {% extends "BlogBundle::layout.html.twig" %}
 
 {% block title %}
-  Ajoouter un article - {{ parent() }}
+  Ajouter un article - {{ parent() }}
 {% endblock %}
 
 {% block blog_body %}
@@ -11,12 +11,12 @@
 
 
 
-  <h2>Ajouter une annonce</h2>
+  <h2>Ajouter une information</h2>
 
   {{ include("BlogBundle:Article:form.html.twig") }}
 
   <p>
-    Attention : cette annonce sera ajoutée directement
+    Attention : cette information sera ajoutée directement
     sur la page d'accueil après validation du formulaire.
   </p>
 
