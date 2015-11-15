@@ -19,18 +19,13 @@ class ArticleController extends Controller
 
 
 		$listArticles = $repository->findBy(
-  array(), // Critere
-  array('date' => 'desc'),        // Tri
-  100,                         // Limite
-  0                            // Offset
+  array(), 
+  array('date' => 'desc'),        
+  100,                        
+  0                            
 );
-/*
-	foreach ($listArticles as $article) {
-  // $advert est une instance de Advert
-		//echo $article->getContent();
 
-	}
-  */      return $this->render('BlogBundle:Home:index.html.twig', array(
+    return $this->render('BlogBundle:Home:index.html.twig', array(
   'listArticles' => $listArticles
 ));
     }
@@ -38,18 +33,10 @@ class ArticleController extends Controller
 	public function viewAction($id)
   {
 
-	  // On récupère le repository
-   // $repository = $this->getDoctrine()
-     // ->getManager()
-	  //->getRepository('BlogBundle:Article')
-	 //;
-	  //->find('BlogBundle:Article', $id);
 	$article = $this->getDoctrine()
 	->getManager()
 	->find('BlogBundle:Article', $id)
 	;
-
-	//$article = $repository->find($id);
 
 	 if (null === $article) {
       throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
@@ -72,15 +59,13 @@ class ArticleController extends Controller
 
 
 	$listArticles = $repository->findBy(
-  array(), // Critere
-  array('date' => 'desc'),        // Tri
-  $limit,                         // Limite
-  0                            // Offset
+  array(), 
+  array('date' => 'desc'),        
+  $limit,                        
+  0                           
 );
 
     return $this->render('BlogBundle:Article:menu.html.twig', array(
-      // Tout l'intérêt est ici : le contrôleur passe
-      // les variables nécessaires au template !
       'listArticles' => $listArticles
     ));
   }
@@ -89,10 +74,9 @@ class ArticleController extends Controller
 	$em = $this->getDoctrine()->getManager();
 	$article = new Article();
 	$article->setDate(new \Datetime());
-	// On crée le FormBuilder grâce au service form factory
+	
     $formBuilder = $this->get('form.factory')->createBuilder('form', $article);
 
-    // On ajoute les champs de l'entité que l'on veut à notre formulaire
     $formBuilder
       ->add('date',      'date')
       ->add('title',     'text')
@@ -101,9 +85,7 @@ class ArticleController extends Controller
       ->add('published', 'checkbox')
       ->add('save',      'submit')
     ;
-    // Pour l'instant, pas de candidatures, catégories, etc., on les gérera plus tard
 
-    // À partir du formBuilder, on génère le formulaire
     $form = $formBuilder->getForm();
 	$formBuilder->add('published', 'checkbox', array('required' => false));
 	$form->handleRequest($request);
@@ -115,7 +97,6 @@ class ArticleController extends Controller
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
-      // On redirige vers la page de visualisation de l'annonce nouvellement créée
       return $this->redirect($this->generateUrl('blog_view', array('id' => $article->getId())));
     }
 
@@ -128,7 +109,6 @@ class ArticleController extends Controller
   {
     $em = $this->getDoctrine()->getManager();
 
-    // On récupère l'annonce $id
     $article = $em->getRepository('BlogBundle:Article')->find($id);
 	if (null === $article) {
       throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
@@ -144,7 +124,6 @@ class ArticleController extends Controller
       ->add('save',      'submit')
     ;
 	$form = $formBuilder->getForm();
-	//$formBuilder->add('published', 'checkbox', array('required' => false));
 	$form->handleRequest($request);
 
 	
@@ -155,45 +134,33 @@ class ArticleController extends Controller
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
-      // On redirige vers la page de visualisation de l'annonce nouvellement créée
       return $this->redirect($this->generateUrl('blog_view', array('id' => $article->getId())));
     }
-
 	
-	// formulaire
-
-	/*return $this->render('BlogBundle:Article:edit.html.twig', array(
-      'article' => $article
-    ));
-	*/return $this->render('BlogBundle:Article:edit.html.twig', array(
+	return $this->render('BlogBundle:Article:edit.html.twig', array(
       'form' => $form->createView(),'article' => $article
     ));
   }
 
   public function deleteAction($id, Request $request)
   {
-    // On récupère l'EntityManager
     $em = $this->getDoctrine()->getManager();
 
-    // On récupère l'entité correspondant à l'id $id
     $article = $em->getRepository('BlogBundle:Article')->find($id);
 
-    // Si l'annonce n'existe pas, on affiche une erreur 404
     if ($article == null) {
       throw $this->createNotFoundException("L'annonce d'id ".$id." n'existe pas.");
     }
 
     if ($request->isMethod('POST')) {
-      // Si la requête est en POST, on deletea l'article
 		
       $request->getSession()->getFlashBag()->add('info', 'Annonce bien supprimée.');
-		
-      // Puis on redirige vers l'accueil
+
       return $this->redirect($this->generateUrl('blog_homepage'));
     }
 	$em->remove($article);
 	$em->flush();
-    // Si la requête est en GET, on affiche une page de confirmation avant de delete
+	
     return $this->render('BlogBundle:Article:delete.html.twig', array(
       'article' => $article
     ));
