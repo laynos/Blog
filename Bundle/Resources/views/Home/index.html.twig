@@ -8,32 +8,22 @@
 
 {% block blog_body %}
 
-  <h2>Liste des annonces</h2>
+  <h2>Toutes les informations</h2>
 
-  <ul>
     {% for article in listArticles %}
-       <div class="panel panel-primary">
-			<div class="panel-heading">
-			 <a href="{{ path('blog_view', {'id': article.id}) }}" class="panel-title">{{ article.title }}</a>
-				 par {{ article.author }},
-        le {{ article.date|date('d/m/Y') }}
+       <div class="cadre">
+			<div class="fondArticle">
+			 <a href="{{ path('blog_view', {'id': article.id}) }}" class="titreArticle"><center>{{ article.title }}</center></a>
+				<center>par {{ article.author }},
+        le {{ article.date|date('d/m/Y') }}</center>
 			</div>
 			<div class="panel-body">{{ article.content }}</div>
 		</div>
 
     {% else %}
-      <li>Pas (encore !) d'annonces</li>
+      <li>Aucun article disponible pour le moment.</li>
+	  <li>Cliquez sur "ajouter une nouvelle information" pour allimenté notre BLOG !</li>
     {% endfor %}
 		 
-	<!--	    <div class="container">
-  <ul class="pagination">
-    <li><a href="#">&laquo;</a></li>
-    <li><a href="#">1</a></li>
-    <li><a href="#">2</a></li>
-    <li><a href="#">3</a></li>
-    <li><a href="#">&raquo;</a></li>
-  </ul>
-</div>
-  </ul>
--->
+
 {% endblock %}
