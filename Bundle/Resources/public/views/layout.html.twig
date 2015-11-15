@@ -17,21 +17,7 @@
 </head>
 
 <body>
-<!--
-    <div class="container">
-        <nav class="navbar navbar-inverse">
-		<div class="navbar-header">
-			<a class="navbar-brand" href="{{ path('blog_homepage') }}"> BLOG FIFA ?  </a>
-		</div>
-        <div class="container-fluid">
-          <ul class="nav navbar-nav">
-            <li class="active"> <a href="{{ path('blog_homepage') }}">Accueil</a> </li>
-            <li> <a href="{{ path('blog_article_test') }}">Ajouter une annonce</a> </li>
-          </ul>
-         
-        </div>
-      </nav>
-	  -->
+
 	   <div class="container">
 	  <nav class="navbar navbar-trans navbar-fixed-top" role="navigation">
         <div class="navbar-header">
@@ -41,12 +27,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ path('blog_homepage') }}"> City News Blog  </a>
+            <a class="navbar-brand" href="{{ path('blog_homepage') }}"> Info Ville </a>
         </div>
         <div class="navbar-collapse collapse" id="navbar-collapsible">
             <ul class="nav navbar-nav navbar-left">
 				<li class="active"> <a href="{{ path('blog_homepage') }}">Accueil</a> </li>
-			 <li> <a href="{{ path('blog_article_test') }}">Ajouter une annonce</a> </li>
+			 <li> <a href="{{ path('blog_article_test') }}">Ajouter une nouvelle information</a> </li>
             </ul>
         </div>
     </div>
@@ -55,15 +41,15 @@
 
 <section class="container-fluid" id="section1">
     <div id="menu" class="col-md-2">
-        <h3>Dernières annonces</h3>
+        <h3>Informations Récentes</h3>
         {{ render(controller("BlogBundle:Article:menu", {'limit': 3})) }}
 		</div>
 		<div class="row">
-  <div class="col-md-5 .col-md-offset-2">{% block body %}{% endblock %}</div>
+  <div class="col-md-6 .col-md-offset-2">{% block body %}{% endblock %}</div>
   </div>
    <hr>
    
-Copyright &copy; 2015 &middot; All Rights Reserved &middot; Bemat Souhel & Gull Hassan
+Copyright &copy; 2015 BLOG &middot; All Rights Reserved &middot; Bemat Souhel & Gull Hassan
     
 	<hr>
 	
